@@ -6,9 +6,10 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express();
 const router = express.Router();
+var data = require('./data.js');
 
 
-const DIR = '/Users/kevinabongo/uploads/';
+const DIR = data.filePath;
 
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {

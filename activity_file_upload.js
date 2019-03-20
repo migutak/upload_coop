@@ -87,7 +87,7 @@
                       console.log(bulk)
                       request.post({
                         headers: {'content-type' : 'application/json'},
-                        url:     'http://localhost:8800/api/uploads',
+                        url:     API + '/api/uploads',
                         json:    bulk
                       }, function(error, response, body){
                         if(error) console.log(error);
