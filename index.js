@@ -38,11 +38,11 @@ app.use(cors())
   next();node 
 });*/
 
-app.get('/api', function (req, res) {
+app.get('/filesapi', function (req, res) {
   res.end('file catcher example');
 });
 
-app.post('/api/upload', upload.single('photo'), function (req, res) {
+app.post('/filesapi/upload', upload.single('photo'), function (req, res) {
   if (!req.file) {
     // console.log("No file received");
     return res.json({
@@ -58,7 +58,24 @@ app.post('/api/upload', upload.single('photo'), function (req, res) {
   }
 });
 
-app.post('/download', function (req, res) {
+app.post('/filesapi/pdf', upload.any(), function (req, res) {
+  console.log(req.files)
+  if (!req.files) {
+    console.log("No file received");
+    return res.json({
+      success: false
+    });
+
+  } else {
+    // console.log('file received');
+    return res.json({
+      success: true,
+      file: req.files
+    })
+  }
+});
+
+app.post('/filesapi/download', function (req, res) {
   res.sendFile(req.body.filename);
 });
 

@@ -9,12 +9,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "amqplib": "^0.5.3",
     "async": "^2.6.2",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "fs": "0.0.1-security",
+    "moment": "^2.24.0",
+    "mongo-xlsx": "^1.0.12",
+    "mongodb": "^3.2.7",
     "multer": "^1.4.1",
+    "oracledb": "^3.1.2",
     "path": "^0.12.7",
     "request": "^2.88.0",
     "xlsx": "^0.14.1"

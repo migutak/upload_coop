@@ -56,12 +56,11 @@
         storage: storage
       }).any();
 
-    app.get('/api', function (req, res) {
-        res.end('file catcher example');
+    app.get('/filesapi', function (req, res) {
+        res.end('file catcher ....');
     });
 
-    app.post('/api', function (req, res) {
-        console.log('body==>' , req.body);
+    app.post('/filesapi', function (req, res) {
         upload(req, res, function (err) {
 
             if (err) {
@@ -71,31 +70,6 @@
                     message: err.toString()
                 })
             } else {
-                for (i=0; i<req.files.length; i++) {
-                    console.log('files ==> ' + i, req.files[i]);
-                    const bulk = {
-                        'accnumber': req.body.accnumber,
-                        'custnumber': req.body.custnumber,
-                        'destpath': req.files[i].path,
-                        'filename': req.files[i].originalname,
-                        'colofficer': req.body.owner,
-                        'filetype': req.files[i].mimetype,
-                        'filesize': req.files[i].size,
-                        'doctype': 'user_activity_upload',
-                        'docdesc': req.body.docdesc
-                      };
-                      console.log(bulk)
-                      request.post({
-                        headers: {'content-type' : 'application/json'},
-                        url:     API + '/api/uploads',
-                        json:    bulk
-                      }, function(error, response, body){
-                        if(error) console.log(error);
-                        if (!error && response.statusCode == 200) {
-                            console.log('uploaded ==> ', body)
-                        }
-                      });
-                }
                 res.json({
                     success: true,
                     files: req.files
@@ -105,7 +79,7 @@
         });
     });
 
-    var PORT = process.env.PORT || 5001;
+    var PORT = process.env.PORT || 3100;
 
     app.listen(PORT, function () {
         console.log('Working on port ' + PORT);
