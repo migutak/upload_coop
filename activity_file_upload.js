@@ -57,7 +57,7 @@
       }).any();
 
     app.get('/filesapi', function (req, res) {
-        res.end('file catcher ....');
+        res.end('file catcher .... Home');
     });
 
     app.post('/filesapi', function (req, res) {
@@ -79,7 +79,12 @@
         });
     });
 
-    var PORT = process.env.PORT || 3100;
+    app.post('/filesapi/filesapi/download', function (req, res) {
+        // res.end('file catcher .... Home');
+        res.sendFile(req.body.filename);
+    });
+
+    var PORT = process.env.PORT || 3000;
 
     app.listen(PORT, function () {
         console.log('Working on port ' + PORT);

@@ -11,6 +11,11 @@ var MongoClient = require('mongodb').MongoClient;
 var dbconfig = require('./dbconfig');
 var mongoxlsx = require('mongo-xlsx');
 var moment = require('moment');
+var uniqid = require('uniqid');
+var oracledb = require('oracledb');
+var SimpleOracleDB = require('simple-oracledb');
+var async = require('async');
+
 var app = express();
 
 var data = require('./data.js');
@@ -19,6 +24,7 @@ const DIR = data.filePath;
 const CORS = data.cors;
 
 const API = data.apiPath;
+SimpleOracleDB.extend(oracledb);
 
 // app.use(cors());
 
@@ -61,7 +67,8 @@ app.get('/xlsupload', function (req, res) {
 
 app.post('/xlsupload', function (req, res) {
     upload(req, res, function (err) {
-        console.log(req.body)
+
+        var random = uniqid();
         var username = req.body.owner;
         var custnumber = req.body.custnumber;
         var sys = req.body.sys;
@@ -73,7 +80,7 @@ app.post('/xlsupload', function (req, res) {
             })
         } else {
             let bulk = null;
-            
+
             let bulknotes = [];
             for (i = 0; i < req.files.length; i++) {
                 /// const workbook = XLSX.readFile(req.files[i].path);
@@ -85,36 +92,81 @@ app.post('/xlsupload', function (req, res) {
 
                 mongoxlsx.xlsx2MongoData(xlsx, model, function (err, data) {
                     if (err) throw err;
-                    
-                    
+
+
                     for (x = 0; x < data.length; x++) {
                         let bulknote = {};
                         // console.log(data[x]);
-                        if (sys === 'cc' || sys === 'watchcc') {
+                        if (sys == 'cc' || sys == 'watchcc') {
                             bulknote.custnumber = data[x].accnumber;
-                          } else {
+                        } else {
                             bulknote.custnumber = (data[x].accnumber).substring(5, 12);
-                          }
+                        }
                         bulknote.accnumber = data[x].accnumber;
                         bulknote.notemade = data[x].notemade;
-                        bulknote.custnumber = (data[x].accnumber).substring(5, 12);
                         bulknote.owner = username
                         bulknote.notesrc = 'uploaded a note';
-                        bulknote.notedate = moment().format();
-
+                        bulknote.noteimp = 'N';
+                        // bulknote.notedate = moment().format('YYYY-MM-DD HH:mm:ss'); //moment(doc.notedate).format('YYYY-MM-DD HH:mm:ss')
+                        // bulknote.batchno = random;
 
                         bulknotes.push(bulknote);
                     }
 
-                    // console.log(bulknotes);
+                    console.log(bulknotes);
+                    const batch = {
+                        batchno: random,
+                        name: req.files[0].originalname,
+                        path: req.files[0].path,
+                        owner: username,
+                        batchdate: moment().format(),
+                        success: 0,
+                        failed: 0,
+                        total: bulknotes.length,
+                        act: 'n'
+                    }
+                    const sql = "insert into notehis(custnumber,accnumber,notemade,owner,notesrc, noteimp) values(:custnumber,:accnumber,:notemade,:owner,:notesrc,:noteimp)";
+                    async function run() {
+                        let connection;
+                        
+                        try {
+                          connection = await oracledb.getConnection({
+                            user: dbconfig.user,
+                            password: dbconfig.password,
+                            connectString: dbconfig.connectString
+                        });
+                      
+                          const result = await connection.executeMany(sql, bulknotes, {autoCommit: true});
+                          console.log("Result is:", result);
+                          res.json({
+                            success: true,
+                            files: req.files,
+                            notes: bulknotes
+                          })
+                      
+                        } catch (err) {
+                          console.error(err);
+                        } finally {
+                          if (connection) {
+                            try {
+                              await connection.close();
+                            } catch (err) {
+                              console.error(err);
+                            }
+                          }
+                        }
+                      }
+                      
+                      run();
+
                     // send to mongo
-                    MongoClient.connect(dbconfig.mongo, { useNewUrlParser: true }, function (err, db) {
+                    /*MongoClient.connect(dbconfig.mongo, { useNewUrlParser: true }, function (err, db) {
                         if (err) throw err;
                         // console.log("Database created!");
                         var dbo = db.db("easy-notes");
                         dbo.collection("notes").insertMany(bulknotes, { forceServerObjectId: true }, function (err, resp) {
                             if (err) throw err;
-                           // console.log("1 document inserted");
+                            console.log("Bulknotes inserted");
                             res.json({
                                 success: true,
                                 files: req.files,
@@ -124,6 +176,18 @@ app.post('/xlsupload', function (req, res) {
                         });
                     });
 
+                    // send to batch queue
+                    amqp.connect(dbconfig.RABBITMQ, (err, conn) => {
+                        if (err != null) bail(err)
+                        conn.createChannel(on_open);
+                        function on_open (err, ch) {
+                            if (err !=null ) bail(err);
+                            var queue = 'xls_batch';
+                            ch.assertQueue(queue, {durable: false});
+                            ch.sendToQueue(queue, Buffer.from(JSON.stringify(batch)));
+                            console.log('... send to batch queue')
+                        }
+                    })*/
                 });
 
             }
@@ -136,8 +200,39 @@ function bail(err) {
     process.exit(1);
 }
 
-var PORT = process.env.PORT || 3001;
+var doinsert_autocommit = function (conn, cb) {
+    conn.batchInsert("insert into test values(:id, :name)"
+    [{ id: 1, name: 'kevin' }],
+    { autoCommit: true },
+    function (err, result) {
+            if (err) {
+                return cb(err, conn)
+            } else {
+                console.log('OK');
+                return cb(null, conn)
+            }
+        }
+    )
+};
+
+var dorelease = function (conn) {
+    conn.close(function (err) {
+        if (err) console.error(err.message);
+    });
+};
+
+var dbconnect = function (cb) {
+    oracledb.getConnection(
+        {
+            user: dbconfig.user,
+            password: dbconfig.password,
+            connectString: dbconfig.connectString
+        }, cb
+    )
+};
+
+var PORT = process.env.PORT || 5001;
 
 app.listen(PORT, function () {
-    console.log('xls upload on port ' + PORT);
+    console.log('... xls upload on port ' + PORT);
 });

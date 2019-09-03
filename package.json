@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "amqplib": "^0.5.3",
-    "async": "^2.6.2",
+    "async": "^2.6.3",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
@@ -19,9 +19,11 @@
     "mongo-xlsx": "^1.0.12",
     "mongodb": "^3.2.7",
     "multer": "^1.4.1",
-    "oracledb": "^3.1.2",
+    "oracledb": "^4.0.0",
     "path": "^0.12.7",
     "request": "^2.88.0",
+    "simple-oracledb": "^1.4.2",
+    "uniqid": "^5.0.3",
     "xlsx": "^0.14.1"
   },
   "devDependencies": {},
