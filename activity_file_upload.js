@@ -1,9 +1,6 @@
     /*eslint-disable*/
     var express = require('express');
     var multer = require('multer');
-    var fs = require('fs');
-    var cors = require('cors');
-    var request = require('request');
     const bodyParser = require('body-parser');
     var app = express();
 
@@ -11,10 +8,6 @@
 
     const DIR = data.filePath;
     const CORS = data.cors;
-
-    const API = data.apiPath;
-
-    // app.use(cors());
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({
@@ -29,20 +22,6 @@
         res.setHeader('Access-Control-Allow-Credentials', true);
         next();
     });
-
-    // app.use(multer({dest:'./uploads/'}).single('photo'))
-    /*app.use(multer({
-        dest: DIR,
-        rename: function (fieldname, filename) {
-            return Date.now() + filename;
-        },
-        onFileUploadStart: function (file) {
-            console.log(file.originalname + ' is starting ...');
-        },
-        onFileUploadComplete: function (file) {
-            console.log(file.fieldname + ' uploaded to  ' + file.path);
-        }
-    }).any());*/
 
     var storage = multer.diskStorage({
         destination: (req, file, cb) => {
@@ -79,7 +58,7 @@
         });
     });
 
-    app.post('/filesapi/filesapi/download', function (req, res) {
+    app.post('/filesapi/download', function (req, res) {
         // res.end('file catcher .... Home');
         res.sendFile(req.body.filename);
     });

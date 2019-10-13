@@ -1,9 +1,6 @@
     /*eslint-disable*/
     var express = require('express');
     var multer = require('multer');
-    var fs = require('fs');
-    var cors = require('cors');
-    var request = require('request');
     const bodyParser = require('body-parser');
     var app = express();
 
@@ -13,12 +10,7 @@
     var dbConfig = require('./dbconfig.js');
 
     const DIR = data.filePath;
-    
-
-    const API = data.apiPath;
     const CORS = data.cors;
-
-    // app.use(cors());
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({
@@ -70,7 +62,6 @@
 
     app.post('/api', function (req, res) {
         upload(req, res, function (err) {
-
             if (err) {
                 // return res.end(err.toString());
                 res.json({
@@ -94,21 +85,8 @@
                         'bypost': true,
                         'demand': req.body.demand
                       };
-                      console.log(bulk)
                       //insert
                       var doinsert2 = function (conn, cb) {
-                        /*conn.execute(
-                          "INSERT INTO test VALUES (:id, :nm)",
-                          [2, 'Alison'],  // 'bind by position' syntax
-                          { autoCommit: true },  // commit once for all DML in the script
-                          function(err, result) {
-                            if (err) {
-                              return cb(err, conn);
-                            } else {
-                              console.log("Rows inserted: " + result.rowsAffected);  // 1
-                              return cb(null, conn);
-                            }
-                          });*/
                           
                           var sql = "INSERT INTO demandshistory (accnumber, custnumber) VALUES (:accnumber, :custnumber)";
                           var binds = bulk;
@@ -145,16 +123,6 @@
                           if (conn)
                             dorelease(conn);
                         });
-                      /*request.post({
-                        headers: {'content-type' : 'application/json'},
-                        url:     API,
-                        json:    bulk
-                      }, function(error, response, body){
-                        if(error) console.log(error);
-                        if (!error && response.statusCode == 200) {
-                            console.log('uploaded ==> ', body)
-                        }
-                      });*/
                 }
                 res.json({
                     success: true,

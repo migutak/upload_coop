@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js activity_file_upload.js demands_uploads.js xls_uploads.js"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +19,7 @@
     "mongo-xlsx": "^1.0.12",
     "mongodb": "^3.2.7",
     "multer": "^1.4.1",
-    "oracledb": "^4.0.0",
+    "oracledb": "^4.0.1",
     "path": "^0.12.7",
     "request": "^2.88.0",
     "simple-oracledb": "^1.4.2",
