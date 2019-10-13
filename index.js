@@ -1,11 +1,8 @@
-const path = require('path');
-const fs = require('fs');
 const express = require('express');
 const multer = require('multer');
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express();
-const router = express.Router();
 var data = require('./data.js');
 
 
@@ -39,7 +36,7 @@ app.use(cors())
 });*/
 
 app.get('/filesapi', function (req, res) {
-  res.end('file catcher example');
+  res.json({ message: 'filesapi' });
 });
 
 app.post('/filesapi/upload', upload.single('photo'), function (req, res) {

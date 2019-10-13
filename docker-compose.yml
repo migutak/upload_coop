@@ -1,0 +1,17 @@
+version: "3.3"
+services:
+  uploads:
+    image: migutak/uploads:1.0.0
+    container_name: uploads
+    restart: always
+    environment:
+      - FILEPATH=C:\\logs\\
+      - CORS=http://localhost
+      - DB_USER=ecol
+      - DB_PASSWORD=ecol
+      - DB_CONNECTIONSTRING=dbsvr2dr:1523/ecoltst
+    ports:
+      - "4000:4000"
+      - "5000:5000"
+      - "5001:5001"
+      - "3000:3000"

@@ -36,7 +36,7 @@
       }).any();
 
     app.get('/filesapi', function (req, res) {
-        res.end('file catcher .... Home');
+        res.json({ message: 'filesapi' });
     });
 
     app.post('/filesapi', function (req, res) {
@@ -66,5 +66,5 @@
     var PORT = process.env.PORT || 3000;
 
     app.listen(PORT, function () {
-        console.log('Working on port ' + PORT);
+        console.log('activity_file_uploads on port ' + PORT);
     });

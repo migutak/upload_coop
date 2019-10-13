@@ -50,7 +50,7 @@ var upload = multer({
 }).any();
 
 app.get('/xlsupload', function (req, res) {
-    res.json({ message: 'file catcher example' });
+    res.json({ message: 'xlsupload' });
 });
 
 app.post('/xlsupload', function (req, res) {

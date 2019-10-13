@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js activity_file_upload.js demands_uploads.js xls_uploads.js"
+    "start": "concurrently \"node index.js\" \"node activity_file_upload.js\" \"node demands_upload.js\" \"node xls_uploads.js\""
   },
   "keywords": [],
   "author": "",
@@ -12,6 +12,7 @@
     "amqplib": "^0.5.3",
     "async": "^2.6.3",
     "body-parser": "^1.18.3",
+    "concurrently": "^5.0.0",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "fs": "0.0.1-security",
