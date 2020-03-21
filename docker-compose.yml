@@ -5,11 +5,10 @@ services:
     container_name: uploads
     restart: always
     environment:
-      - FILEPATH=C:\\logs\\
-      - CORS=http://localhost
-      - DB_USER=ecol
-      - DB_PASSWORD=ecol
-      - DB_CONNECTIONSTRING=dbsvr2dr:1523/ecoltst
+      - CORS=http://localhost:4500,
+      - FILEPATH=/var/uploads
+    volumes:
+      - "c:\\logs\\:/var/uploads"
     ports:
       - "4000:4000"
       - "5000:5000"

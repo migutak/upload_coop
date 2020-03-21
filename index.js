@@ -76,6 +76,10 @@ app.post('/filesapi/download', function (req, res) {
   res.sendFile(req.body.filename);
 });
 
+app.post('/download', function (req, res) {
+  res.sendFile(req.body.filename);
+});
+
 
 const PORT = process.env.PORT || 4000;
 
