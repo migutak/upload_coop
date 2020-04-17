@@ -63,7 +63,6 @@ app.post('/filesapi', function (req, res) {
 });
 
 app.post('/filesapi/download', function (req, res) {
-    // res.end('file catcher .... Home');
     res.sendFile(req.body.filename);
 });
 
