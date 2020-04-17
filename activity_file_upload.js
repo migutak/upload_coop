@@ -67,6 +67,10 @@ app.post('/filesapi/download', function (req, res) {
     res.sendFile(req.body.filename);
 });
 
+app.post('/demanddownload/filesapi/download', function (req, res) {
+    res.sendFile(req.body.filename);
+});
+
 app.get('/filesapi/download/bpms', function (req, res) {
     var filename = req.query.filename;
     res.download(filename);
