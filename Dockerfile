@@ -1,8 +1,11 @@
-FROM node:10.16.3-alpine
-WORKDIR /app/uploads
-COPY . /app/uploads
-RUN mkdir -p /app/nfs/uploads
-RUN mkdir -p /app/nfs/demandletters
+FROM node:12.9.1-slim
+RUN usermod -aG sudo node
+USER node
+WORKDIR /home/node/uploads
+COPY . /home/node/uploads
+
+RUN mkdir -p /home/node/nfs/uploads
+RUN mkdir -p /home/node/nfs/demandletters
 
 CMD ["npm" , "start"]
 
