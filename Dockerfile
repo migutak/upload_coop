@@ -1,11 +1,12 @@
 FROM node:12.9.1-slim
+RUN mkdir -p /app/nfs/demandletters && chown node:node -R /app/nfs/demandletters
 RUN usermod -aG sudo node
 USER node
 WORKDIR /home/node/uploads
 COPY . /home/node/uploads
 
-RUN mkdir -p /home/node/nfs/uploads
-RUN mkdir -p /home/node/nfs/demandletters
+#RUN mkdir -p /home/node/nfs/uploads
+#RUN mkdir -p /home/node/nfs/demandletters
 
 CMD ["npm" , "start"]
 
