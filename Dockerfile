@@ -1,9 +1,11 @@
-FROM node:12.9.1-slim
+FROM node:12.9.1-alpine
 RUN mkdir -p /app/nfs/demandletters && chown node:node -R /app/nfs/demandletters
-RUN usermod -aG sudo node
-USER node
 WORKDIR /home/node/uploads
 COPY . /home/node/uploads
+RUN npm install --production
+# && usermod -aG sudo node
+USER node
+
 
 #RUN mkdir -p /home/node/nfs/uploads
 #RUN mkdir -p /home/node/nfs/demandletters
