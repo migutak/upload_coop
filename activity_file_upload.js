@@ -79,12 +79,12 @@ function convertbase64(filepath) {
     pdf2base64(filepath)
         .then(
             (response) => {
-                console.log(response); //cGF0aC90by9maWxlLmpwZw==
+                console.log(response);
             }
         )
         .catch(
             (error) => {
-                console.log(error); //Exepection error....
+                console.log(error);
             }
         )
 }
