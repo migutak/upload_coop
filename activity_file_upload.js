@@ -39,7 +39,7 @@ var upload = multer({
 }).any();
 
 app.get('/filesapi', function (req, res) {
-    res.json({ message: 'filesapi for activity' });
+    res.json({ message: 'filesapi for activity_file_upload' });
 });
 
 app.post('/filesapi', function (req, res) {
