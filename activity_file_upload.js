@@ -44,7 +44,7 @@ app.get('/filesapi', function (req, res) {
 
 app.post('/filesapi', function (req, res) {
     upload(req, res, function (err) {
-        convertbase64(req.files[0].path);
+        //convertbase64(req.files[0].path);
         if (err) {
             // return res.end(err.toString());
             res.json({

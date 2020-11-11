@@ -41,13 +41,11 @@ app.get('/filesapi', function (req, res) {
 
 app.post('/filesapi/upload', upload.single('photo'), function (req, res) {
   if (!req.file) {
-    // console.log("No file received");
     return res.json({
       success: false
     });
 
   } else {
-    // console.log('file received');
     return res.json({
       success: true,
       file: req.file
@@ -64,7 +62,6 @@ app.post('/filesapi/pdf', upload.any(), function (req, res) {
     });
 
   } else {
-    // console.log('file received');
     return res.json({
       success: true,
       file: req.files
