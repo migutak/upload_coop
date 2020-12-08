@@ -1,86 +1,77 @@
-    /*eslint-disable*/
-    var express = require('express');
-    var multer = require('multer');
-    var fs = require('fs');
-    var cors = require('cors');
-    var request = require('request');
-    const bodyParser = require('body-parser');
-    var app = express();
+/*eslint-disable*/
+var express = require('express');
+var multer = require('multer');
+const bodyParser = require('body-parser');
+var app = express();
 
-    var data = require('./data.js');
+var data = require('./data.js');
+const DIR = data.filePath;
 
-    const DIR = data.filePath;
-    const CORS = data.cors;
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
-    const API = data.apiPath;
+app.use((req, res, next) => {
+    const allowedOrigins = [
+        'http://127.0.0.1:4200',
+        'http://localhost:4200',
+        'http://127.0.0.1:3000',
+        'http://localhost:3000',
+        'http://ecollectweb.co-opbank.co.ke:8002',
+        'http://ecollecttst.co-opbank.co.ke:8002'
+    ];
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+    res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', true);
+    next();
+});
 
-    // app.use(cors());
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, DIR);
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+var upload = multer({
+    storage: storage
+}).any();
 
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({
-        extended: true
-    }));
-    
+app.get('/filesapi', function (req, res) {
+    res.end('file uploader/downloader ....');
+});
 
-    app.use(function (req, res, next) {
-        res.setHeader('Access-Control-Allow-Origin', CORS);
-        res.setHeader('Access-Control-Allow-Methods', 'POST');
-        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-        res.setHeader('Access-Control-Allow-Credentials', true);
-        next();
-    });
+app.post('/filesapi/download', function (req, res) {
+    res.sendFile(req.body.filename);
+});
 
-    // app.use(multer({dest:'./uploads/'}).single('photo'))
-    /*app.use(multer({
-        dest: DIR,
-        rename: function (fieldname, filename) {
-            return Date.now() + filename;
-        },
-        onFileUploadStart: function (file) {
-            console.log(file.originalname + ' is starting ...');
-        },
-        onFileUploadComplete: function (file) {
-            console.log(file.fieldname + ' uploaded to  ' + file.path);
+app.post('/filesapi', function (req, res) {
+    upload(req, res, function (err) {
+        if (err) {
+            res.json({
+                success: false,
+                message: err.toString()
+            })
+        } else {
+            res.json({
+                success: true,
+                files: req.files
+            })
         }
-    }).any());*/
-
-    var storage = multer.diskStorage({
-        destination: (req, file, cb) => {
-          cb(null, DIR);
-        },
-        filename: (req, file, cb) => {
-          cb(null, Date.now() + '-' + file.originalname);
-        }
-      });
-      var upload = multer({
-        storage: storage
-      }).any();
-
-    app.get('/filesapi', function (req, res) {
-        res.end('file catcher ....');
+        res.end('File is uploaded');
     });
+});
 
-    app.post('/filesapi', function (req, res) {
-        upload(req, res, function (err) {
+var PORT = process.env.PORT || 3000;
 
-            if (err) {
-                // return res.end(err.toString());
-                res.json({
-                    success: false,
-                    message: err.toString()
-                })
-            } else {
-                res.json({
-                    success: true,
-                    files: req.files
-                })
-            }
-            res.end('File is uploaded');
-        });
-    });
+app.listen(PORT, function () {
+    console.log('Working on port ' + PORT);
+});
 
-    var PORT = process.env.PORT || 3100;
-
-    app.listen(PORT, function () {
-        console.log('Working on port ' + PORT);
-    });

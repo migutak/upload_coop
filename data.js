@@ -1,8 +1,3 @@
 module.exports = {
-    // filePath: '/Users/kevinabongo/uploads/',
-    apiPath: 'http://localhost:8800',
-    filePath: 'C:\\logs\\',
-    // apiPath: 'http://ecollecttst.co.ke:8800/api/demandshistory',
-    // cors: 'http://ecollecttst.co.ke:8002',
-    cors: 'http://localhost:4500',
+    filePath: process.env.FILEPATH || "D:\\uploads", // 'D:\\uploads' '/app/nfs/uploads/'
 }
