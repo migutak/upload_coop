@@ -3,7 +3,6 @@ const multer = require('multer');
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express();
-const router = express.Router();
 var data = require('./data.js');
 
 
@@ -28,7 +27,7 @@ app.use(bodyParser.urlencoded({
 app.use(cors())
 
 app.get('/filesapi', function (req, res) {
-  res.end('file catcher example');
+  res.json({ message: 'filesapi' });
 });
 
 app.post('/filesapi/upload', upload.single('photo'), function (req, res) {
@@ -62,6 +61,10 @@ app.post('/filesapi/pdf', upload.any(), function (req, res) {
 });
 
 app.post('/filesapi/download', function (req, res) {
+  res.sendFile(req.body.filename);
+});
+
+app.post('/download', function (req, res) {
   res.sendFile(req.body.filename);
 });
 

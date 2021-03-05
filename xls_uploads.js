@@ -2,19 +2,19 @@
 var express = require('express');
 var multer = require('multer');
 var path = require('path');
-var fs = require('fs');
-var cors = require('cors');
-var amqp = require('amqplib/callback_api');
 const bodyParser = require('body-parser');
-const XLSX = require('xlsx');
-var MongoClient = require('mongodb').MongoClient;
 var dbconfig = require('./dbconfig');
 var mongoxlsx = require('mongo-xlsx');
+<<<<<<< HEAD
 var moment = require('moment');
 var uniqid = require('uniqid');
 var oracledb = require('oracledb');
 var SimpleOracleDB = require('simple-oracledb');
 var async = require('async');
+=======
+var oracledb = require('oracledb');
+var SimpleOracleDB = require('simple-oracledb');
+>>>>>>> 3383ba6bb682cbe4d128173317b124d28f3ab38d
 
 var app = express();
 
@@ -23,11 +23,15 @@ var data = require('./data.js');
 const DIR = data.filePath;
 const CORS = data.cors;
 
+<<<<<<< HEAD
 const API = data.apiPath;
 SimpleOracleDB.extend(oracledb);
 
 // app.use(cors());
 
+=======
+SimpleOracleDB.extend(oracledb);
+>>>>>>> 3383ba6bb682cbe4d128173317b124d28f3ab38d
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
@@ -62,13 +66,17 @@ var upload = multer({
 }).any();
 
 app.get('/xlsupload', function (req, res) {
-    res.json({ message: 'file catcher example' });
+    res.json({ message: 'xlsupload' });
 });
 
 app.post('/xlsupload', function (req, res) {
     upload(req, res, function (err) {
 
+<<<<<<< HEAD
         var random = uniqid();
+=======
+        // var random = uniqid();
+>>>>>>> 3383ba6bb682cbe4d128173317b124d28f3ab38d
         var username = req.body.owner;
         var custnumber = req.body.custnumber;
         var sys = req.body.sys;
@@ -92,6 +100,7 @@ app.post('/xlsupload', function (req, res) {
 
                 mongoxlsx.xlsx2MongoData(xlsx, model, function (err, data) {
                     if (err) throw err;
+<<<<<<< HEAD
 
 
                     for (x = 0; x < data.length; x++) {
@@ -189,7 +198,75 @@ app.post('/xlsupload', function (req, res) {
                         }
                     })*/
                 });
+=======
 
+                    // check rows
+                    if (data.length > 5000) {
+                        // row limit exceeded
+                        res.json({
+                            success: false,
+                            message: 'row limit exceeded. max is 5k'
+                        })
+                    } else {
+
+                        for (x = 0; x < data.length; x++) {
+                            let bulknote = {};
+                            // console.log(data[x]);
+                            if (sys == 'cc' || sys == 'watchcc') {
+                                bulknote.custnumber = data[x].accnumber;
+                            } else {
+                                bulknote.custnumber = (data[x].accnumber).substring(5, 12);
+                            }
+                            bulknote.accnumber = data[x].accnumber;
+                            bulknote.notemade = data[x].notemade;
+                            bulknote.owner = username
+                            bulknote.notesrc = 'uploaded a note';
+                            bulknote.noteimp = 'N';
+                            // bulknote.notedate = moment().format('YYYY-MM-DD HH:mm:ss'); //moment(doc.notedate).format('YYYY-MM-DD HH:mm:ss')
+                            // bulknote.batchno = random;
+
+                            bulknotes.push(bulknote);
+                        }
+
+
+                        const sql = "insert into notehis(custnumber,accnumber,notemade,owner,notesrc, noteimp) values(:custnumber,:accnumber,:notemade,:owner,:notesrc,:noteimp)";
+                        async function run() {
+                            let connection;
+
+                            try {
+                                connection = await oracledb.getConnection({
+                                    user: dbconfig.user,
+                                    password: dbconfig.password,
+                                    connectString: dbconfig.connectString
+                                });
+
+                                const result = await connection.executeMany(sql, bulknotes, { autoCommit: true });
+                                console.log("Result is:", result);
+                                res.json({
+                                    success: true,
+                                    files: req.files,
+                                    notes: bulknotes
+                                })
+
+                            } catch (err) {
+                                console.error(err);
+                            } finally {
+                                if (connection) {
+                                    try {
+                                        await connection.close();
+                                    } catch (err) {
+                                        console.error(err);
+                                    }
+                                }
+                            }
+                        }
+
+                        run();
+
+                    }
+>>>>>>> 3383ba6bb682cbe4d128173317b124d28f3ab38d
+
+                });
             }
         }
     });
@@ -200,6 +277,7 @@ function bail(err) {
     process.exit(1);
 }
 
+<<<<<<< HEAD
 var doinsert_autocommit = function (conn, cb) {
     conn.batchInsert("insert into test values(:id, :name)"
     [{ id: 1, name: 'kevin' }],
@@ -215,6 +293,8 @@ var doinsert_autocommit = function (conn, cb) {
     )
 };
 
+=======
+>>>>>>> 3383ba6bb682cbe4d128173317b124d28f3ab38d
 var dorelease = function (conn) {
     conn.close(function (err) {
         if (err) console.error(err.message);
