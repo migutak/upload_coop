@@ -1,3 +1,3 @@
 module.exports = {
-    filePath: process.env.FILEPATH || "D:\\uploads", // 'D:\\uploads' '/app/nfs/uploads/'
+    filePath: process.env.FILEPATH || "/app/nfs/uploads/", // 'D:\\uploads' '/app/nfs/uploads/'
 }

@@ -19,4 +19,4 @@ EXPOSE 3000
 
 CMD ["npm" , "start"]
 
-# docker build -t 172.16.204.72:5100/uploads:5.1 .
+# docker build -t migutak/uploads:5.0 .

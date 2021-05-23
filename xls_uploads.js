@@ -113,7 +113,7 @@ app.post('/xlsupload', function (req, res) {
                         bulknotes.push(bulknote);
                     }
 
-                    console.log(bulknotes);
+                    //console.log(bulknotes);
                     const batch = {
                         batchno: random,
                         name: req.files[0].originalname,
