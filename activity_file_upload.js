@@ -49,7 +49,7 @@ app.get('/filesapi', function (req, res) {
 });
 
 app.post('/filesapi/download', function (req, res) {
-    res.sendFile(req.body.filename);
+    res.sendFile(req.body.filename); 
 });
 
 app.post('/filesapi', function (req, res) {
@@ -65,7 +65,7 @@ app.post('/filesapi', function (req, res) {
                 files: req.files
             })
         }
-        res.end('File is uploaded');
+        //res.end('File is uploaded');
     });
 });
 
