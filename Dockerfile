@@ -21,6 +21,6 @@ USER node
 #EXPOSE 4000
 EXPOSE 3000
 
-CMD ["node" , "activity_file_upload.js"]
+CMD ["node", "activity_file_upload.js"]
 
-# docker build -t migutak/uploads:5.2 .
+# docker build -t migutak/uploads:5.4 .

@@ -1,17 +1,16 @@
 /*eslint-disable*/
 var express = require('express');
 var multer = require('multer');
-const bodyParser = require('body-parser');
 var app = express();
+var morgan = require('morgan');
+const ecsFormat = require('@elastic/ecs-morgan-format');
 
 var data = require('./data.js');
 const DIR = data.filePath;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(morgan(ecsFormat()))
 app.use((req, res, next) => {
     const allowedOrigins = [
         'http://127.0.0.1:4200',

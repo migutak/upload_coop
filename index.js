@@ -1,10 +1,10 @@
 const express = require('express');
 const multer = require('multer');
-const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express();
 var data = require('./data.js');
-
+var morgan = require('morgan');
+const ecsFormat = require('@elastic/ecs-morgan-format');
 
 const DIR = data.filePath;
 
@@ -20,10 +20,8 @@ let upload = multer({
   storage: storage
 });
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cors())
 
 app.get('/filesapi', function (req, res) {
