@@ -2,15 +2,14 @@
 var express = require('express');
 var multer = require('multer');
 var app = express();
-var morgan = require('morgan');
-const ecsFormat = require('@elastic/ecs-morgan-format');
+//var morgan = require('morgan');
+//const ecsFormat = require('@elastic/ecs-morgan-format');
 
 var data = require('./data.js');
 const DIR = data.filePath;
-
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(morgan(ecsFormat()))
+//app.use(express.json());
+//app.use(morgan(ecsFormat()))
 app.use((req, res, next) => {
     const allowedOrigins = [
         'http://127.0.0.1:4200',
@@ -24,10 +23,12 @@ app.use((req, res, next) => {
     if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
     }
-    res.setHeader('Access-Control-Allow-Methods', 'POST');
-    res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS'); 
     res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Authorization');
     res.header('Access-Control-Allow-Credentials', true);
+    if (req.method === 'OPTIONS') {
+        res.status(200);
+    } 
     next();
 });
 
@@ -51,9 +52,14 @@ app.post('/filesapi/download', function (req, res) {
     res.sendFile(req.body.filename); 
 });
 
+app.post('/filesapi/filesapi/download', function (req, res) {
+    res.sendFile(req.body.filename); 
+});
+
 app.post('/filesapi', function (req, res) {
-    upload(req, res, function (err) {
+    upload(req, res, function (err) {   
         if (err) {
+            console.log(err)
             res.json({
                 success: false,
                 message: err.toString()

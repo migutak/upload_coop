@@ -3,8 +3,6 @@ const multer = require('multer');
 const cors = require('cors')
 const app = express();
 var data = require('./data.js');
-var morgan = require('morgan');
-const ecsFormat = require('@elastic/ecs-morgan-format');
 
 const DIR = data.filePath;
 

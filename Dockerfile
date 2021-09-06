@@ -1,5 +1,6 @@
 FROM node:16-buster-slim
 
+RUN apt-get update && apt-get install -y vim iputils-ping
 RUN mkdir -p /app/nfs/demandletters && mkdir -p  /home/ecollectadmin/templates && \
     mkdir -p  /home/ecollectadmin/demandletters &&\
     chown node:node -R /app/nfs/demandletters && \
@@ -18,9 +19,9 @@ COPY --chown=node . .
 
 # && usermod -aG sudo node
 USER node
-#EXPOSE 4000
+
 EXPOSE 3000
 
 CMD ["node", "activity_file_upload.js"]
 
-# docker build -t migutak/uploads:5.4 .
+# docker build -t migutak/uploads:5.6.1 .
