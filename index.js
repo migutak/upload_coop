@@ -14,6 +14,7 @@ let storage = multer.diskStorage({
     cb(null, Date.now() + '-' + file.originalname);
   }
 });
+
 let upload = multer({
   storage: storage
 });
@@ -41,7 +42,6 @@ app.post('/filesapi/upload', upload.single('photo'), function (req, res) {
 });
 
 app.post('/filesapi/pdf', upload.any(), function (req, res) {
-  console.log(req.files)
   if (!req.files) {
     console.log("No file received");
     return res.json({
@@ -57,11 +57,11 @@ app.post('/filesapi/pdf', upload.any(), function (req, res) {
 });
 
 app.post('/filesapi/download', function (req, res) {
-  res.sendFile(req.body.filename);
+  res.download(req.body.filename);
 });
 
 app.post('/download', function (req, res) {
-  res.sendFile(req.body.filename);
+  res.download(req.body.filename);
 });
 
 

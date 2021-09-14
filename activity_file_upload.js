@@ -8,7 +8,7 @@ var app = express();
 var data = require('./data.js');
 const DIR = data.filePath;
 app.use(express.urlencoded({ extended: true }));
-//app.use(express.json());
+app.use(express.json());
 //app.use(morgan(ecsFormat()))
 app.use((req, res, next) => {
     const allowedOrigins = [
@@ -49,11 +49,15 @@ app.get('/filesapi', function (req, res) {
 });
 
 app.post('/filesapi/download', function (req, res) {
-    res.sendFile(req.body.filename); 
+    res.download(req.body.filename); 
 });
 
 app.post('/filesapi/filesapi/download', function (req, res) {
-    res.sendFile(req.body.filename); 
+    res.download(req.body.filename); 
+});
+
+app.get('/filesapi/download/bpms', function (req, res) {
+    res.download(req.query.filename); 
 });
 
 app.post('/filesapi', function (req, res) {
