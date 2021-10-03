@@ -21,7 +21,29 @@ let upload = multer({
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors())
+//app.use(cors())
+
+app.use((req, res, next) => {
+  const allowedOrigins = [
+      'http://127.0.0.1:4200',
+      'http://localhost:4200',
+      'http://127.0.0.1:3000',
+      'http://localhost:3000',
+      'http://ecollectweb.co-opbank.co.ke:8002',
+      'http://ecollecttst.co-opbank.co.ke:8002'
+  ];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS'); 
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', true);
+  if (req.method === 'OPTIONS') {
+      res.status(200);
+  } 
+  next();
+});
 
 app.get('/filesapi', function (req, res) {
   res.json({ message: 'filesapi' });

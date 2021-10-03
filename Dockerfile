@@ -24,4 +24,4 @@ EXPOSE 3000
 
 CMD ["node", "activity_file_upload.js"]
 
-# docker build -t migutak/uploads:5.6.4 .
+# docker build -t migutak/uploads:5.7 .
